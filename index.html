@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="stylesheet.css" />
+    <title>25+5 Clock</title>
+    <script>
+      let sessionTime = 25;
+      let breakTime = 5;
+      let secondsBreak = 0;
+      let secondsSession = 0;
+      let index;
+      let contador;
+      let estado;
+      function tiempoDefault(){
+        index = 1;
+        sessionTime = 25;
+        breakTime = 5;
+        secondsBreak = 0;
+        secondsSession = 0;
+        estado = "Session";
+      }
+      function display(){
+        document.getElementById("timer-label").innerText = "Session";
+        document.getElementById("session-length").innerText = sessionTime;
+        document.getElementById("break-length").innerText = breakTime;
+        if(document.getElementById("timer-label").innerText == "Session"){
+          if(sessionTime < 10) {
+            if (secondsSession < 10){
+              document.getElementById("time-left").innerText = "0" + sessionTime + ":0" + secondsSession;
+            } else {
+              document.getElementById("time-left").innerText = "0" + sessionTime + ":" + secondsSession;
+            }
+          } else {
+            if (secondsSession < 10){
+              document.getElementById("time-left").innerText = sessionTime + ":0" + secondsSession;
+            } else {
+              document.getElementById("time-left").innerText = sessionTime + ":" + secondsSession;
+            }
+          }
+        }
+      }
+      function reset() {
+        clearInterval(contador);
+        document.getElementById("beep").pause();
+        document.getElementById("beep").currentTime = 0;
+        tiempoDefault();
+        display();
+      }
+      function decrement(arr){
+        if(index == 1){
+          switch (arr) {
+            case "break":
+              if(breakTime > 1){
+                secondsBreak = 0;
+                breakTime -= 1;
+                document.getElementById("break-length").innerText = breakTime;
+                if(document.getElementById("timer-label").innerText == "Break"){
+                  if(breakTime < 10) {
+                    document.getElementById("time-left").innerText = "0" + breakTime + ":0" + secondsBreak;
+                  } else {
+                    document.getElementById("time-left").innerText =  breakTime + ":0" + secondsBreak;
+                  }
+                }
+            }
+              break;
+            case "session":
+            if(sessionTime > 1){
+              sessionTime -= 1;
+              secondsSession= 0;
+              document.getElementById("session-length").innerText = sessionTime;
+              if(document.getElementById("timer-label").innerText == "Session"){
+                if(sessionTime < 10) {
+                  document.getElementById("time-left").innerText = "0" + sessionTime + ":0" + secondsSession;
+                } else {
+                  document.getElementById("time-left").innerText =  sessionTime + ":0" + secondsSession;
+                }
+              }
+            }
+              break;
+          }
+        }
+      }
+      function increment(arr){
+        if(index == 1){
+          switch (arr) {
+            case "break":
+              if(breakTime < 60){
+                secondsBreak = 0;
+                breakTime += 1;
+                document.getElementById("break-length").innerText = breakTime;
+                if(document.getElementById("timer-label").innerText == "Break"){
+                  if(breakTime < 10) {
+                    document.getElementById("time-left").innerText = "0" + breakTime + ":0" + secondsBreak;
+                  } else {
+                    document.getElementById("time-left").innerText =  breakTime + ":0" + secondsBreak;
+                  }
+                }
+            }
+              break;
+            case "session":
+              if(sessionTime < 60){
+                secondsSession = 0;
+                sessionTime += 1;
+                document.getElementById("session-length").innerText = sessionTime;
+                if(document.getElementById("timer-label").innerText == "Session"){
+                  if(sessionTime < 10) {
+                    document.getElementById("time-left").innerText = "0" + sessionTime + ":0" + secondsSession;
+                  } else {
+                    document.getElementById("time-left").innerText =  sessionTime + ":0" + secondsSession;
+                  }
+                }
+            }
+              break;
+          }
+        }
+      }
+
+      function initTimer(){
+        if(index == 1){
+          index = 0;
+          contador = setInterval(segundos, 1000);
+        } else if(index == 0){
+          index = 1;
+          clearInterval(contador);
+        }
+      }
+      function segundos(){
+        if(estado == "Break"){
+          secondsBreak -=1;
+          if(secondsBreak == -1){
+            if(breakTime == 0) {
+              clearInterval(contador);
+              estado = "Session";
+              index = 1;
+              secondsBreak = 0;
+              secondsSession = 0;
+              breakTime = parseInt(document.getElementById("break-length").innerText);
+              document.getElementById("beep").play();
+              document.getElementById("timer-label").innerText = "Session";
+              if(sessionTime < 10) {
+                document.getElementById("time-left").innerText = "0" + sessionTime + ":0" + secondsSession;
+              } else {
+                document.getElementById("time-left").innerText =  sessionTime + ":0" + secondsSession;
+              }
+              initTimer();
+            } else {
+                breakTime -= 1;
+                secondsBreak = 59;
+                if(breakTime < 10) {
+                  document.getElementById("time-left").innerText = "0" + breakTime + ":" + secondsBreak;
+                } else {
+                  document.getElementById("time-left").innerText =  breakTime + ":" + secondsBreak;
+                }
+              }
+          } else if(secondsBreak < 10){
+            if(breakTime < 10) {
+              document.getElementById("time-left").innerText = "0" + breakTime + ":0" + secondsBreak;
+            } else {
+              document.getElementById("time-left").innerText =  breakTime + ":0" + secondsBreak;
+            }
+          } else {
+            if(breakTime < 10) {
+              document.getElementById("time-left").innerText = "0" + breakTime + ":" + secondsBreak;
+            } else {
+              document.getElementById("time-left").innerText =  breakTime + ":" + secondsBreak;
+            }
+          }
+        } else if(estado == "Session"){
+          secondsSession -= 1;
+          if(secondsSession == -1){
+            if(sessionTime == 0){
+              clearInterval(contador);
+              index = 1;
+              secondsSession = 0;
+              secondsBreak = 0;
+              sessionTime = parseInt(document.getElementById("session-length").innerText);
+              document.getElementById("beep").play();
+              estado = "Break";
+              document.getElementById("timer-label").innerText = "Break";
+              if(breakTime < 10) {
+                document.getElementById("time-left").innerText = "0" + breakTime + ":0" + secondsBreak;
+              } else {
+                document.getElementById("time-left").innerText =  breakTime + ":0" + secondsBreak;
+              }
+              initTimer();
+            } else {
+              sessionTime -= 1;
+              secondsSession = 59;
+              if(sessionTime < 10) {
+                document.getElementById("time-left").innerText = "0" + sessionTime + ":" + secondsSession;
+              } else {
+                document.getElementById("time-left").innerText =  sessionTime + ":" + secondsSession;
+              }
+            }
+          } else if(secondsSession < 10){
+            if(sessionTime < 10) {
+              document.getElementById("time-left").innerText = "0" + sessionTime + ":0" + secondsSession;
+            } else {
+              document.getElementById("time-left").innerText =  sessionTime + ":0" + secondsSession;
+            }
+          } else {
+            if(sessionTime < 10) {
+              document.getElementById("time-left").innerText = "0" + sessionTime + ":" + secondsSession;
+            } else {
+              document.getElementById("time-left").innerText =  sessionTime + ":" + secondsSession;
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body onload="reset()">
+    <div id="container">
+      <div class="contadores">
+        <div id="break-label">Break Length</div>
+        <div class="flechas">
+          <button id="break-decrement" onClick="decrement('break')"><i class="arrow down"></i></button>
+          <div id="break-length"></div>
+          <button id="break-increment" onClick="increment('break')"><i class="arrow up"></i></button>
+        </div>
+      </div>
+      <div class="contadores">
+        <div id="session-label">Session Length</div>
+        <div class="flechas">
+          <button id="session-decrement" onClick="decrement('session')"><i class="arrow down"></i></button>
+          <div id="session-length"></div>
+          <button id="session-increment" onClick="increment('session')"><i class="arrow up"></i></button>
+        </div>
+      </div>
+      <div id="reloj">
+        <div id="timer-label">Session</div>
+        <div id="time-left"></div>
+        <button id="start_stop" onclick="initTimer()">Play/Stop</button>
+        <button id="reset" onClick="reset()">Reset</button>
+      </div>
+    </div>
+    <audio id="beep">
+      <source src="BeepSound.wav" type="audio/wav">
+      <source src="SonidoAlarma.mp3" type="audio/mp3">
+      Formato no compatible
+    </audio>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+  </body>
+</html>

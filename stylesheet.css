@@ -1,0 +1,45 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  font-size: 30px;
+  background-color: 	#F99AAA;
+}
+button {
+  background-color: #F99AAA;
+}
+#container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 400px;
+  height: 300px;
+  text-align: center;
+}
+.contadores {
+  width: 50%;
+  display: block;
+  margin: auto;
+}
+.flechas {
+  display: flex;
+  justify-content: center;
+}
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+#reloj {
+  margin: auto;
+}
